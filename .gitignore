@@ -1,0 +1,33 @@
+```gitignore
+# Arduino temporary files
+*.tmp
+*.bak
+*.old
+
+# Build files
+build/
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Secrets
+secrets.h
+config.h
+.env
+
+# Logs
+*.log
+
+# Videos
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Large archives
+*.zip
+*.rar
+*.7z

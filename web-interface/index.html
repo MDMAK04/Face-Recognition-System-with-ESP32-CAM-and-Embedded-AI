@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FaceDoor Lock — Edge Impulse</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00ff88" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
+      <div class="logo-text">Face<span>Door</span> Lock</div>
+    </div>
+
+    <div class="header-actions">
+      <div class="mode-pill">Edge Impulse sur ESP32</div>
+      <button class="btn btn-blue top-btn" onclick="openThingSpeak()">ThingSpeak</button>
+    </div>
+  </header>
+
+  <main class="page-layout">
+    <section class="left-content">
+      <div class="ip-bar">
+        <div class="status-indicator" id="statusDot"></div>
+        <label for="espIp">ESP32-CAM IP</label>
+        <input class="ip-input" id="espIp" type="text" value="192.168.137.96" placeholder="192.168.x.x" />
+        <button class="btn btn-green" onclick="connectESP()">Connecter</button>
+        <button class="btn btn-blue" onclick="scanNow()">Analyser</button>
+        <button class="btn btn-amber clear-btn" onclick="clearLog()">Effacer log</button>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card green">
+          <div class="stat-label">ACCÈS AUTORISÉS</div>
+          <div class="stat-value" id="statAuthorized">0</div>
+          <div class="stat-sub">depuis ouverture</div>
+        </div>
+
+        <div class="stat-card red">
+          <div class="stat-label">ACCÈS REFUSÉS</div>
+          <div class="stat-value" id="statRefused">0</div>
+          <div class="stat-sub">depuis ouverture</div>
+        </div>
+
+        <div class="stat-card blue">
+          <div class="stat-label">DERNIÈRE DÉTECTION</div>
+          <div class="stat-value stat-sm" id="statLastTime">—</div>
+          <div class="stat-sub" id="statLastName">aucune</div>
+        </div>
+      </div>
+
+      <div class="bottom-row">
+        <div class="card camera-card">
+          <div class="card-header-line">
+            <div class="card-label">FLUX CAMÉRA — ESP32-CAM</div>
+            <div class="mini-status" id="cameraState">hors ligne</div>
+          </div>
+
+          <div class="camera-feed">
+            <div class="camera-overlay">
+              <div class="corner tl"></div><div class="corner tr"></div>
+              <div class="corner bl"></div><div class="corner br"></div>
+            </div>
+
+            <div class="no-feed" id="noFeedMsg">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6b7080" stroke-width="1.5">
+                <path d="M23 7l-7 5 7 5V7z"></path>
+                <rect x="1" y="5" width="15" height="14" rx="2"></rect>
+              </svg>
+              <span>En attente de connexion...</span>
+            </div>
+
+            <img id="streamImg" alt="Image ESP32-CAM" />
+          </div>
+
+          <div class="score-panel">
+            <div class="score-row">
+              <span>Authorized</span>
+              <strong id="authorizedScore">0.0000</strong>
+            </div>
+            <div class="bar-bg"><div class="bar-fill green-fill" id="authorizedBar"></div></div>
+
+            <div class="score-row">
+              <span>Not authorized</span>
+              <strong id="notAuthorizedScore">0.0000</strong>
+            </div>
+            <div class="bar-bg"><div class="bar-fill red-fill" id="notAuthorizedBar"></div></div>
+          </div>
+        </div>
+
+        <div class="card door-card">
+          <div class="card-header-line">
+            <div class="card-label">ÉTAT DE LA PORTE</div>
+            <div class="mini-status" id="deviceState">non connecté</div>
+          </div>
+
+          <div class="door-status">
+            <div class="door-visual closed" id="doorVisual">
+              <div class="door-knob"></div>
+            </div>
+            <div class="door-status-text closed" id="doorStatusText">FERMÉE</div>
+            <div class="door-sub" id="doorSub">En attente de détection</div>
+          </div>
+
+          <div class="device-debug">
+            <div><span>Mode</span><strong id="modelMode">float32</strong></div>
+            <div><span>Seuil</span><strong id="thresholdValue">0.70</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="card-label" style="margin:0">JOURNAL D'ACCÈS</div>
+        <span class="log-count" id="logCount">0 entrées</span>
+      </div>
+      <div class="log-list" id="logList">
+        <div class="log-empty">Aucun accès enregistré</div>
+      </div>
+    </aside>
+  </main>
+
+  <div class="toast" id="toast">
+    <div class="toast-title" id="toastTitle"></div>
+    <div class="toast-msg" id="toastMsg"></div>
+  </div>
+
+  <script src="script.js?v=30"></script>
+</body>
+</html>
