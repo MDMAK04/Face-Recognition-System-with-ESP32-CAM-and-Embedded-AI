@@ -181,8 +181,6 @@ Door = CLOSED
 | Field 2 | Authorized score |
 | Field 3 | Not authorized score |
 | Field 4 | Door state |
-| Field 5 | Authorized hits |
-| Field 6 | Refused hits |
 
 ---
 
